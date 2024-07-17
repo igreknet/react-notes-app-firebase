@@ -4,19 +4,12 @@ import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
 import Split from 'react-split';
 
-//firebase create an id by itself, so we dont need to use nanoid anymore
-// import { nanoid } from 'nanoid';
-
 import { addDoc, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db, notesCollection } from './firebase';
 
 export default function App() {
-  //get items from local storage with lazy loading state
-  // const [notes, setNotes] = useState(() => JSON.parse(localStorage.getItem('notes')) || []);
-
   const [notes, setNotes] = useState([]);
 
-  // const [currentNoteId, setCurrentNoteId] = useState(notes[0]?.id || '');
   const [currentNoteId, setCurrentNoteId] = useState('');
 
   //create new state to tempNote, so we will not update note on every keypress
@@ -26,11 +19,6 @@ export default function App() {
 
   //to pop up recent edited note
   const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt);
-
-  //save data in local storage
-  //   useEffect(() => {
-  //     localStorage.setItem('notes', JSON.stringify(notes));
-  //   }, [notes]);
 
   //sync up our local notes array with the snapshot data
   useEffect(() => {
@@ -50,16 +38,6 @@ export default function App() {
       setCurrentNoteId(notes[0]?.id);
     }
   }, [notes]);
-
-  //create new note
-  // function createNewNote() {
-  //   const newNote = {
-  //     id: nanoid(),
-  //     body: "# Type your markdown note's title here",
-  //   };
-  //   setNotes(prevNotes => [newNote, ...prevNotes]);
-  //   setCurrentNoteId(newNote.id);
-  // }
 
   useEffect(() => {
     if (currentNote) {
@@ -95,34 +73,11 @@ export default function App() {
     setCurrentNoteId(newNoteRef.id);
   }
 
-  //update note in local state, and pop up recent edited note
-  // function updateNote(text) {
-  //   setNotes(oldNotes => {
-  //     const newArray = [];
-  //     for (let i = 0; i < oldNotes.length; i++) {
-  //       const oldNote = oldNotes[i];
-  //       if (oldNote.id === currentNoteId) {
-  //         // Put the most recently-modified note at the top
-  //         newArray.unshift({ ...oldNote, body: text });
-  //       } else {
-  //         newArray.push(oldNote);
-  //       }
-  //     }
-  //     return newArray;
-  //   });
-  // }
-
   //update note in firebase
   async function updateNote(text) {
     const docRef = doc(db, 'notes', currentNoteId);
     await setDoc(docRef, { body: text, updatedAt: Date.now() }, { merge: true });
   }
-
-  // delete note from local state
-  // function deleteNote(event, noteId) {
-  //   event.stopPropagation();
-  //   setNotes(oldNotes => oldNotes.filter(note => note.id !== noteId));
-  // }
 
   //delete note in firebase, doc helps us get get access to single document
   async function deleteNote(noteId) {

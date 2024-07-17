@@ -1,6 +1,5 @@
 {
-  "name": "Scrim-s04mqf3",
-  "description": "https://v2.scrimba.com/learn-react-c0e/~04k",
+  "name": "react-notes-app-firebase",
   "scripts": {
     "start": "vite",
     "dev": "vite",
